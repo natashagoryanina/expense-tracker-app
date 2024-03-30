@@ -1,13 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Expense } from "../../data/Expenses";
 import { GlobalStyles } from "../../constants/styles";
+import { useAppSelector } from "../../store/redux/hooks";
+import { getExpenses } from "../../store/redux/slices/expensesSlice";
 
 type ExpensesSummaryType = {
   periodName: string;
-  expenses: Expense[];
 };
 
-const ExpensesSummary = ({ periodName, expenses }: ExpensesSummaryType) => {
+const ExpensesSummary = ({ periodName }: ExpensesSummaryType) => {
+  const expenses = useAppSelector(getExpenses);
+
   const expensesSum = expenses.reduce((sum, expense) => {
     return sum + expense.amount;
   }, 0);

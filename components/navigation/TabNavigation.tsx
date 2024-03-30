@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { GlobalStyles } from "../../constants/styles";
+import IconBtn from "../common/Buttons/IconBtn";
 // screens
 import AllExpenses from "../../screens/AllExpenses";
 import RecentExpenses from "../../screens/RecentExpenses";
@@ -10,12 +11,24 @@ const Tab = createBottomTabNavigator();
 const TabNavigation = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
         headerTintColor: "white",
         tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
-      }}
+        headerRight: ({ tintColor }) => (
+          <IconBtn
+            iconName="add"
+            color={tintColor}
+            size={24}
+            onPress={() => {
+              navigation.navigate("ManageExpenses", {
+                isEditPage: false,
+              });
+            }}
+          />
+        ),
+      })}
     >
       <Tab.Screen
         name="RecentExpenses"

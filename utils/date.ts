@@ -1,3 +1,7 @@
-export const getFormattedDate = (date: Date) => {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-};
+import { format } from "date-fns";
+
+export function getFormattedDate(date: number) {
+  const formattedDate = format(date, "dd MMMM, yyyy");
+
+  return formattedDate;
+}

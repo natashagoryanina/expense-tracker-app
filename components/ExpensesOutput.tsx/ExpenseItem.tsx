@@ -1,16 +1,36 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
+import { useNavigation } from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 import { getFormattedDate } from "../../utils/date";
 
 type ExpenseItemProps = {
+  id: string;
   description: string;
-  date: Date;
+  date: number;
   amount: number;
 };
 
-const ExpenseItem = ({ description, date, amount }: ExpenseItemProps) => {
+const ExpenseItem = ({ id, description, date, amount }: ExpenseItemProps) => {
+  const navigation = useNavigation();
+
+  const expensePressHandler = () => {
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: "ManageExpenses",
+        params: {
+          expenseId: id,
+          isEditPage: true,
+        },
+      })
+    );
+  };
+
   return (
-    <Pressable>
+    <Pressable
+      style={({ pressed }) => pressed && styles.pressed}
+      onPress={expensePressHandler}
+    >
       <View style={styles.expenseItem}>
         <View>
           <Text style={[styles.textBase, styles.description]}>
@@ -29,6 +49,9 @@ const ExpenseItem = ({ description, date, amount }: ExpenseItemProps) => {
 export default ExpenseItem;
 
 const styles = StyleSheet.create({
+  pressed: {
+    opacity: 0.75,
+  },
   expenseItem: {
     padding: 12,
     marginVertical: 8,
@@ -36,11 +59,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderRadius: 6,
     backgroundColor: GlobalStyles.colors.primary500,
-    elevation: 3,
-    shadowColor: GlobalStyles.colors.gray500,
-    shadowRadius: 4,
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.4,
   },
   textBase: {
     color: GlobalStyles.colors.primary50,
