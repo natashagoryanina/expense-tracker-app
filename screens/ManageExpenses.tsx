@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useLayoutEffect, useState } from "react";
 import { GlobalStyles } from "../constants/styles";
@@ -40,16 +40,23 @@ const ManageExpenses = () => {
     navigation.goBack();
   };
 
+  const invalidData = !amount || !date || !description;
+
   const onAddBtnClick = async () => {
-    await dispatch(
-      addExpense({
-        id: uuid.v4().toString(),
-        description: description,
-        amount: Number(amount),
-        date: new Date(date).getTime(),
-      })
-    );
-    navigation.goBack();
+    if (invalidData) {
+      Alert.alert("Enter valid data, please");
+      return;
+    } else {
+      await dispatch(
+        addExpense({
+          id: uuid.v4().toString(),
+          description: description,
+          amount: Number(amount),
+          date: new Date(date).getTime(),
+        })
+      );
+      navigation.goBack();
+    }
   };
 
   return (

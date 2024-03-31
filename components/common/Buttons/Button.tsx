@@ -8,13 +8,14 @@ type ButtonProps = {
   onPress: () => void;
   mode?: ButtonModes;
   style?: ViewStyle;
+  disabled?: boolean;
 };
 
-const Button = ({ style, text, onPress, mode }: ButtonProps) => {
+const Button = ({ style, text, onPress, mode, disabled }: ButtonProps) => {
   return (
     <View style={style}>
-      <Pressable onPress={onPress}>
-        <View style={[styles.button, mode === "flat" && styles.flat]}>
+      <Pressable onPress={onPress} disabled={disabled}>
+        <View style={[styles.button, mode === "flat" && styles.flat, disabled && styles.disabled]}>
           <Text
             style={[styles.button_text, mode === "flat" && styles.flat_text]}
           >
@@ -33,6 +34,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     backgroundColor: GlobalStyles.colors.primary500,
+  },
+  disabled: {
+    backgroundColor: GlobalStyles.colors.gray500,
   },
   flat: {
     backgroundColor: "transparent",
