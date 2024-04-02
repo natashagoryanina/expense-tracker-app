@@ -2,10 +2,13 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useAppSelector } from "../../store/redux/hooks";
 import { getExpenses } from "../../store/redux/slices/expensesSlice";
 import ExpenseItem from "./ExpenseItem";
+import { Expense } from "../../data/Expenses";
 
-const ExpensesList = () => {
-  const expenses = useAppSelector(getExpenses);
+type ExpensesListProps = {
+  expenses: Expense[];
+};
 
+const ExpensesList = ({ expenses }: ExpensesListProps) => {
   return (
     <>
       {expenses.length ? (
@@ -35,11 +38,11 @@ export default ExpensesList;
 const styles = StyleSheet.create({
   empty_container: {
     marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
   empty_text: {
-    color: 'white',
-    fontSize: 24
-  }
-})
+    color: "white",
+    fontSize: 24,
+  },
+});

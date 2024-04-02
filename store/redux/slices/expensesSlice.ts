@@ -1,6 +1,10 @@
 import { RootState } from "./../store";
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const BACKEND_URL =
+  "https://expenses-tracker-f495e-default-rtdb.firebaseio.com/";
 
 export type Expense = {
   id: string;
@@ -17,6 +21,27 @@ const initialState: Expenses = {
   expensesData: [],
 };
 
+export const fetchExpenses = createAsyncThunk<Expense[]>(
+  "expenses/fetchExpenses",
+  async () => {
+    const result = await axios.get(
+      `https://expenses-tracker-f495e-default-rtdb.firebaseio.com/expenses.json`
+    );
+    const expenses: Expense[] = [];
+
+    for (const key in result.data) {
+      const expenseObj: Expense = {
+        id: key,
+        amount: result.data[key].amount,
+        date: result.data[key].date,
+        description: result.data[key].description,
+      };
+      expenses.push(expenseObj);
+    }
+    return expenses;
+  }
+);
+
 export const expensesSlice = createSlice({
   name: "expenses",
   initialState: initialState,
@@ -30,6 +55,14 @@ export const expensesSlice = createSlice({
         (item) => item.id !== idToDelete
       );
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(
+      fetchExpenses.fulfilled,
+      (state, action: PayloadAction<Expense[]>) => {
+        state.expensesData = action.payload.reverse();
+      }
+    );
   },
 });
 

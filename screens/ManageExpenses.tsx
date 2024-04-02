@@ -9,6 +9,7 @@ import uuid from "react-native-uuid";
 import Button from "../components/common/Buttons/Button";
 import IconBtn from "../components/common/Buttons/IconBtn";
 import ExspenseForm from "../components/ManageExpenses/ExspenseForm";
+import { deleteExpenseFromDB, storeExpenses } from "../firebase/http";
 
 const ManageExpenses = () => {
   const route = useRoute();
@@ -27,9 +28,10 @@ const ManageExpenses = () => {
     });
   }, [navigation, editedExpenseId]);
 
-  const onDeleteBtnClick = () => {
-    navigation.goBack();
+  const onDeleteBtnClick = async () => {
+    await deleteExpenseFromDB(editedExpenseId);
     dispatch(deleteExpense(editedExpenseId));
+    navigation.goBack();
   };
 
   const onCancelBtnClick = () => {
@@ -55,6 +57,11 @@ const ManageExpenses = () => {
           date: new Date(date).getTime(),
         })
       );
+      storeExpenses({
+        description: description,
+        amount: Number(amount),
+        date: new Date(date).getTime(),
+      });
       navigation.goBack();
     }
   };
